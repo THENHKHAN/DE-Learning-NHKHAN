@@ -1,0 +1,5 @@
+git push https://noorulPro@github.com/THENHKHAN/DE-Learning-NHKHAN.git test
+                                                                       <branch name>
+
+from next time :
+ git push origin test
