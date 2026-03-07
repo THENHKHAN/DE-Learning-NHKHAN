@@ -44,4 +44,46 @@ print(f"After removing 4 using remove() method: {a}")
 # if element is not found in the list, it raises a ValueError.
 # a.remove(10) # This will raise ValueError because 10 is not in the
 
-print("")
+a.remove(10) # This will raise ValueError because 10 is not in the list
+#print(f"After removing 10 which is not in the list using the remove() method: {a}")
+        # ValueError: list.remove(x): x not in list
+
+
+'''
+
+Original List: [1, 2, 3, 4, 5]
+After appending 100 usig append method: [1, 2, 3, 4, 5, 100]
+Aftr inserting 300 at index 3 using insert method: [1, 2, 3, 300, 4, 5, 100] 
+Original List: [1, 2, 3, 300, 4, 5, 100]
+After extending list After extend ([11, 33, 55, 77, 99])  a with str2 using extend() method: [1, 2, 3, 300, 4, 5, 100, 11, 33, 55, 77, 99]
+Original List: [1, 2, 3, 300, 4, 5, 100, 11, 33, 55, 77, 99]
+After clearing the list a using clear() method: []
+###################    Updating Elements into List   ###############################
+Original List: [22, 44, 55, 77, 99]
+After updating element at index 2 to 6666: [22, 44, 6666, 77, 99]
+###################    Deleting Elements from List Or Removing Elements from List  ###############################
+Original List: [1, 2, 3, 4, 5]
+After removing 4 using remove() method: [1, 2, 3, 5]
+Traceback (most recent call last):
+  File "e:\1_Coding\0_Data_Engineering_Python\DE-Learning-NHKHAN\0_Python_week_1\0_Concepts\Day_2_List_Tuple_Dict\3_basicOperationsOnList.py", line 47, in <module>
+    a.remove(10) # This will raise ValueError because 10 is not in the list
+    ~~~~~~~~^^^^
+ValueError: list.remove(x): x not in list
+
+
+'''
+
+'''
+
+✅ Summary
+
+| Feature                      | List | Tuple |
+| ---------------------------- | ---- | ----- |
+| Mutable                      | ✔    | ❌     |
+| Methods count(), index()     | ✔    | ✔     |
+| append(), pop(), sort() etc. | ✔    | ❌     |
+| Use Cases                     | When you need to modify the data, use a list. When you want to ensure that the data cannot be changed, use a tuple. |
+
+
+
+'''
