@@ -15,6 +15,19 @@ s = "abcccdddnnnvv"
 target_char1 = 'n'
 target_char2 = 'c'
 target_char3 = 'p'
-print(f"count '{target_char1}' in string '{s}' is : {s.count(target_char1)}")
+print(f"count '{target_char1}' in string '{s}' is : {s.count(target_char1)}") 
 print(f"count '{target_char2}' in string '{s}' is : {s.count(target_char2)}")
 print(f"count '{target_char3}' in string '{s}' is : {s.count(target_char3)}")
+
+'''
+{'a': 1, 'b': 2, 'c': 3, 'f': 55}
+[('Alice', 90), ('Bob', 80), ('Charlie', 85)]
+2nd element of tuple at index 0 is 90
+2nd element of tuple at index 1 is 80
+2nd element of tuple at index 2 is 85
+count 'n' in string 'abcccdddnnnvv' is : 3
+count 'c' in string 'abcccdddnnnvv' is : 3
+count 'p' in string 'abcccdddnnnvv' is : 0
+
+
+'''
