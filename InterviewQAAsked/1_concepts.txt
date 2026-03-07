@@ -1,0 +1,4 @@
+
+
+Q - 1 : What is the internal working of Set and Dictionary - its related to hash and index
+Q - 2 : How Hashmap works internally?

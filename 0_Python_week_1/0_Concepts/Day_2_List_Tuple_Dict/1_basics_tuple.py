@@ -28,3 +28,18 @@ print(f"Type of tup3 : {type(tup3)}") # Type of tup3 : <class 'int'>
 tup3_1 = (6,)
 print(f"Single item in tuple with comma : {tup3_1}")
 print(f"Type of tup3_1 : {type(tup3_1)}") # Type of tup3_1 : <class 'tuple'>
+
+'''
+
+✅ Summary
+
+| Feature                      | List | Tuple |
+| ---------------------------- | ---- | ----- |
+| Mutable                      | ✔    | ❌     |
+| Methods count(), index()     | ✔    | ✔     |
+| append(), pop(), sort() etc. | ✔    | ❌     |
+| Use Cases                     | When you need to modify the data, use a list. When you want to ensure that the data cannot be changed, use a tuple. |
+
+
+
+'''
