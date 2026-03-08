@@ -171,3 +171,14 @@ print(transformed_users)
 map → **modify data**  
 filter → **select data**  
 reduce → **combine data**
+
+### Note - 🔹 Bonus trick (very Pythonic)
+
+Instead of map, many Python developers prefer list comprehension:
+
+```python
+nums = [1,2,3]
+result = [x*x for x in nums]
+# OUTPUT-  [1,4,9]
+
+```
