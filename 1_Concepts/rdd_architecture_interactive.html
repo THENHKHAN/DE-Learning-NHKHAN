@@ -1,0 +1,305 @@
+
+<style>
+  :root { --gap: 12px; }
+  .section { margin-bottom: 2rem; }
+  .label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 8px; }
+  .row { display: flex; gap: var(--gap); align-items: stretch; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; flex: 1; }
+  .card.active { border-color: var(--color-border-info); background: var(--color-background-info); }
+  .card.danger { border-color: var(--color-border-danger); background: var(--color-background-danger); }
+  .card.success { border-color: var(--color-border-success); background: var(--color-background-success); }
+  .card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--color-text-primary); }
+  .card-sub { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 500; }
+  .badge-blue { background: var(--color-background-info); color: var(--color-text-info); }
+  .badge-green { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-red { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .badge-gray { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .arrow-down { text-align: center; font-size: 18px; color: var(--color-text-tertiary); margin: 4px 0; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .tab { padding: 6px 14px; font-size: 13px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); cursor: pointer; background: var(--color-background-primary); color: var(--color-text-secondary); transition: all .15s; }
+  .tab.on { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+  .node-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--gap); }
+  .node { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; background: var(--color-background-primary); transition: all .3s; }
+  .node.crashed { border-color: var(--color-border-danger); background: var(--color-background-danger); }
+  .node.recovering { border-color: var(--color-border-warning); background: var(--color-background-warning); }
+  .node.ok { border-color: var(--color-border-success); background: var(--color-background-success); }
+  .node-name { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+  .partition-bar { height: 6px; border-radius: 3px; margin-top: 6px; background: var(--color-border-tertiary); overflow: hidden; }
+  .partition-fill { height: 100%; border-radius: 3px; background: var(--color-text-info); transition: width .5s; }
+  .partition-fill.red { background: var(--color-text-danger); }
+  .partition-fill.green { background: var(--color-text-success); }
+  .partition-fill.amber { background: var(--color-text-warning); }
+  .code-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.7; color: var(--color-text-primary); margin-top: 6px; }
+  .code-block .kw { color: var(--color-text-info); }
+  .code-block .cm { color: var(--color-text-secondary); font-style: italic; }
+  .code-block .str { color: var(--color-text-success); }
+  .step-btn { padding: 7px 18px; font-size: 13px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); cursor: pointer; background: var(--color-background-primary); color: var(--color-text-primary); }
+  .step-btn:hover { background: var(--color-background-secondary); }
+  .progress-dots { display: flex; gap: 6px; align-items: center; margin-bottom: 12px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-border-tertiary); transition: background .3s; }
+  .dot.on { background: var(--color-text-info); }
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .metric-val { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+</style>
+
+<h2 class="sr-only">Interactive RDD (Resilient Distributed Dataset) explainer showing architecture, transformations, fault tolerance, and a real e-commerce scenario</h2>
+
+<div style="padding: 1rem 0">
+
+<div class="tabs" id="main-tabs">
+  <div class="tab on" onclick="switchTab(0)">🏗 Architecture</div>
+  <div class="tab" onclick="switchTab(1)">🔄 Transformations</div>
+  <div class="tab" onclick="switchTab(2)">🛡 Fault tolerance</div>
+  <div class="tab" onclick="switchTab(3)">🛒 Real scenario</div>
+</div>
+
+<!-- TAB 0: Architecture -->
+<div id="tab-0">
+  <div class="section">
+    <div class="label">Driver Program (your PySpark script)</div>
+    <div class="card active">
+      <div class="card-title">SparkContext</div>
+      <div class="card-sub">Coordinates the whole job. Splits data into partitions, assigns work to nodes, tracks lineage for recovery.</div>
+    </div>
+  </div>
+  <div class="arrow-down">↓ distributes partitions</div>
+  <div class="section">
+    <div class="label">Cluster — 4 Worker Nodes (each has its own RAM)</div>
+    <div class="node-grid">
+      <div class="node ok">
+        <div class="node-name">Node 1 <span class="badge badge-green">active</span></div>
+        <div class="card-sub" style="font-size:11px">Partition P0<br>rows 0–24M</div>
+        <div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="node ok">
+        <div class="node-name">Node 2 <span class="badge badge-green">active</span></div>
+        <div class="card-sub" style="font-size:11px">Partition P1<br>rows 25–49M</div>
+        <div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="node ok">
+        <div class="node-name">Node 3 <span class="badge badge-green">active</span></div>
+        <div class="card-sub" style="font-size:11px">Partition P2<br>rows 50–74M</div>
+        <div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div>
+      </div>
+      <div class="node ok">
+        <div class="node-name">Node 4 <span class="badge badge-green">active</span></div>
+        <div class="card-sub" style="font-size:11px">Partition P3<br>rows 75–100M</div>
+        <div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow-down">↓ results collected</div>
+  <div class="section">
+    <div class="label">Key RDD properties</div>
+    <div class="row">
+      <div class="card"><div class="card-title">🔒 Immutable</div><div class="card-sub">Never modified in-place. Every transformation returns a new RDD. Enables safe parallel reads.</div></div>
+      <div class="card"><div class="card-title">🌐 Distributed</div><div class="card-sub">Partitions live on different machines. All nodes work simultaneously — true parallelism.</div></div>
+      <div class="card"><div class="card-title">♻️ Resilient</div><div class="card-sub">If a node fails, Spark re-computes lost partitions using the DAG lineage graph.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 1: Transformations -->
+<div id="tab-1" style="display:none">
+  <div class="section">
+    <div class="label">Lazy evaluation — nothing runs until an action is called</div>
+    <div class="row" style="margin-bottom:8px">
+      <div class="card active"><div class="card-title">Transformations (lazy)</div><div class="card-sub">Build a plan — no data moves yet.</div>
+        <div class="pill-row">
+          <span class="badge badge-blue">map()</span>
+          <span class="badge badge-blue">filter()</span>
+          <span class="badge badge-blue">flatMap()</span>
+          <span class="badge badge-blue">groupByKey()</span>
+          <span class="badge badge-blue">reduceByKey()</span>
+        </div>
+      </div>
+      <div class="card success"><div class="card-title">Actions (trigger execution)</div><div class="card-sub">Force Spark to evaluate the plan.</div>
+        <div class="pill-row">
+          <span class="badge badge-green">collect()</span>
+          <span class="badge badge-green">count()</span>
+          <span class="badge badge-green">saveAsTextFile()</span>
+          <span class="badge badge-green">take(n)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">E-commerce example — lineage chain</div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <div class="node ok"><div class="node-name">1. Raw RDD</div><div class="card-sub" style="font-size:11px">sc.textFile("logs.txt") — 100M rows, 4 partitions</div></div>
+      <div class="arrow-down" style="margin:0">↓ filter()</div>
+      <div class="node ok"><div class="node-name">2. Failed transactions RDD</div><div class="card-sub" style="font-size:11px">filter(lambda r: r['status'] == 'FAILED') — 2M rows remain</div></div>
+      <div class="arrow-down" style="margin:0">↓ map()</div>
+      <div class="node ok"><div class="node-name">3. (user_id, amount) RDD</div><div class="card-sub" style="font-size:11px">map(lambda r: (r['user_id'], r['amount'])) — extract key-value pairs</div></div>
+      <div class="arrow-down" style="margin:0">↓ reduceByKey()</div>
+      <div class="node ok"><div class="node-name">4. Total loss per user RDD</div><div class="card-sub" style="font-size:11px">reduceByKey(lambda a, b: a + b) — aggregated per user</div></div>
+      <div class="arrow-down" style="margin:0">↓ count() ← ACTION fires here</div>
+      <div class="node" style="border-color:var(--color-border-info);background:var(--color-background-info)"><div class="node-name">Result: 45,231 affected users</div><div class="card-sub" style="font-size:11px">Spark now executes all steps above across all 4 nodes in parallel</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">PySpark code</div>
+    <div class="code-block">
+      <span class="cm"># Load 100M rows from HDFS</span><br>
+      logs = sc.textFile(<span class="str">"hdfs://logs/transactions.txt"</span>)<br><br>
+      <span class="cm"># Build the transformation chain (nothing runs yet)</span><br>
+      result = (logs<br>
+      &nbsp;&nbsp;.<span class="kw">filter</span>(<span class="kw">lambda</span> r: r[<span class="str">'status'</span>] == <span class="str">'FAILED'</span>)<br>
+      &nbsp;&nbsp;.<span class="kw">map</span>(<span class="kw">lambda</span> r: (r[<span class="str">'user_id'</span>], r[<span class="str">'amount'</span>]))<br>
+      &nbsp;&nbsp;.reduceByKey(<span class="kw">lambda</span> a, b: a + b))<br><br>
+      <span class="cm"># Action — triggers actual execution</span><br>
+      result.<span class="kw">saveAsTextFile</span>(<span class="str">"hdfs://output/failed_totals"</span>)
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: Fault Tolerance -->
+<div id="tab-2" style="display:none">
+  <div class="section">
+    <div class="label">Simulate a node failure and recovery</div>
+    <div class="node-grid" id="fault-nodes">
+      <div class="node ok" id="fn0"><div class="node-name">Node 1 ✓</div><div class="card-sub" style="font-size:11px">P0: rows 0–24M</div><div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div></div>
+      <div class="node ok" id="fn1"><div class="node-name">Node 2 ✓</div><div class="card-sub" style="font-size:11px">P1: rows 25–49M</div><div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div></div>
+      <div class="node ok" id="fn2"><div class="node-name">Node 3 ✓</div><div class="card-sub" style="font-size:11px">P2: rows 50–74M</div><div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div></div>
+      <div class="node ok" id="fn3"><div class="node-name">Node 4 ✓</div><div class="card-sub" style="font-size:11px">P3: rows 75–100M</div><div class="partition-bar"><div class="partition-fill green" style="width:100%"></div></div></div>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:10px">
+      <button class="step-btn" onclick="crashNode()">💥 Crash Node 3</button>
+      <button class="step-btn" onclick="recoverNode()">♻️ Recompute partition</button>
+      <button class="step-btn" onclick="resetNodes()">↺ Reset</button>
+    </div>
+    <div id="fault-msg" style="margin-top:10px; font-size:13px; color:var(--color-text-secondary); min-height:36px"></div>
+  </div>
+  <div class="section">
+    <div class="label">How lineage makes resilience possible</div>
+    <div class="row">
+      <div class="card"><div class="card-title">DAG Lineage</div><div class="card-sub">Spark stores every transformation step (the "recipe"). It never stores all intermediate data — just the plan to recreate it.</div></div>
+      <div class="card"><div class="card-title">Re-computation</div><div class="card-sub">When P2 is lost, Spark re-reads only the source rows 50–74M and re-applies the same transformations — on any surviving node.</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">Python list vs RDD — the resilience difference</div>
+    <div class="row">
+      <div class="card danger"><div class="card-title">Python list</div><div class="card-sub">Stored in one process's RAM. If the process dies → all data is gone. No recovery.</div></div>
+      <div class="card success"><div class="card-title">RDD</div><div class="card-sub">Spread across nodes + lineage tracked. One node dies → recompute just that partition. Job continues.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: Real scenario -->
+<div id="tab-3" style="display:none">
+  <div class="section">
+    <div class="label">Scenario: Black Friday fraud detection at scale</div>
+    <div class="card active" style="margin-bottom:10px">
+      <div class="card-title">The problem</div>
+      <div class="card-sub">An e-commerce platform processes 500 million transaction logs from Black Friday. They need to flag every user who had more than 3 failed payments (possible card-testing fraud) — in near real-time.</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">Step-by-step — click through the pipeline</div>
+    <div class="progress-dots" id="dots"></div>
+    <div id="step-display"></div>
+    <div style="display:flex; gap:8px; margin-top:10px">
+      <button class="step-btn" onclick="prevStep()">← Back</button>
+      <button class="step-btn" onclick="nextStep()">Next →</button>
+    </div>
+  </div>
+  <div class="section">
+    <div class="label">Outcome</div>
+    <div class="metric-row">
+      <div class="metric"><div class="metric-val">500M</div><div class="metric-lbl">rows processed</div></div>
+      <div class="metric"><div class="metric-val">4 min</div><div class="metric-lbl">total runtime (20 nodes)</div></div>
+      <div class="metric"><div class="metric-val">12,445</div><div class="metric-lbl">suspicious users flagged</div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const panels = [0,1,2,3].map(i => document.getElementById('tab-'+i));
+function switchTab(i) {
+  tabs.forEach((t,j) => t.classList.toggle('on', i===j));
+  panels.forEach((p,j) => p.style.display = i===j ? '' : 'none');
+}
+
+// Fault tolerance
+let crashed = false, recovering = false;
+function crashNode() {
+  if (crashed) return;
+  crashed = true;
+  const n = document.getElementById('fn2');
+  n.className = 'node crashed';
+  n.querySelector('.node-name').textContent = 'Node 3 ✗';
+  n.querySelector('.partition-fill').className = 'partition-fill red';
+  n.querySelector('.partition-fill').style.width = '0%';
+  document.getElementById('fault-msg').innerHTML = '⚠️ Node 3 crashed. Partition P2 (rows 50–74M) lost. Spark consults lineage graph and schedules re-computation on Node 1.';
+}
+function recoverNode() {
+  if (!crashed) { document.getElementById('fault-msg').textContent = 'Crash a node first.'; return; }
+  const n = document.getElementById('fn2');
+  n.className = 'node recovering';
+  n.querySelector('.node-name').textContent = 'Node 3 ⟳';
+  const bar = n.querySelector('.partition-fill');
+  bar.className = 'partition-fill amber';
+  bar.style.width = '0%';
+  document.getElementById('fault-msg').textContent = '⟳ Re-computing P2 from source data + lineage… (Spark re-reads rows 50–74M, re-applies filter + map)';
+  let w = 0;
+  const t = setInterval(() => {
+    w += 5; bar.style.width = w + '%';
+    if (w >= 100) {
+      clearInterval(t);
+      n.className = 'node ok';
+      n.querySelector('.node-name').textContent = 'Node 3 ✓';
+      bar.className = 'partition-fill green';
+      document.getElementById('fault-msg').innerHTML = '✅ Recovery complete. P2 rebuilt successfully. Job continues with no data loss.';
+      crashed = false;
+    }
+  }, 50);
+}
+function resetNodes() {
+  ['fn0','fn1','fn2','fn3'].forEach((id, i) => {
+    const n = document.getElementById(id);
+    n.className = 'node ok';
+    n.querySelector('.node-name').textContent = 'Node '+(i+1)+' ✓';
+    const bar = n.querySelector('.partition-fill');
+    bar.className = 'partition-fill green';
+    bar.style.width = '100%';
+  });
+  crashed = false;
+  document.getElementById('fault-msg').textContent = '';
+}
+
+// Steps
+const steps = [
+  { title: '1. Load raw logs', sub: '500M transaction records loaded from HDFS into an RDD with 20 partitions (one per node).', badge: 'sc.textFile()', color: 'badge-blue' },
+  { title: '2. Parse each line', sub: 'map() converts each raw string into a structured dict: { user_id, amount, status, timestamp }.', badge: 'map()', color: 'badge-blue' },
+  { title: '3. Keep only failures', sub: 'filter() removes successful transactions. 498M rows dropped. 2M "FAILED" rows remain — each node filters its own partition in parallel.', badge: 'filter()', color: 'badge-blue' },
+  { title: '4. Key by user', sub: 'map() extracts (user_id, 1) — turning each failure event into a countable key-value pair.', badge: 'map()', color: 'badge-blue' },
+  { title: '5. Count per user', sub: 'reduceByKey(+) sums the counts across all partitions. Spark shuffles data to group all records for the same user_id together.', badge: 'reduceByKey()', color: 'badge-blue' },
+  { title: '6. Flag suspects', sub: 'filter() keeps only users with count > 3 failed payments in the window — 12,445 users flagged.', badge: 'filter()', color: 'badge-blue' },
+  { title: '7. Save results ← ACTION', sub: 'saveAsTextFile() triggers the entire plan to execute. All previous steps now run in parallel across 20 nodes. Total: ~4 minutes.', badge: 'saveAsTextFile()', color: 'badge-green' },
+];
+let step = 0;
+function renderDots() {
+  const d = document.getElementById('dots');
+  d.innerHTML = steps.map((_, i) => `<div class="dot${i===step?' on':''}"></div>`).join('');
+}
+function renderStep() {
+  const s = steps[step];
+  document.getElementById('step-display').innerHTML = `
+    <div class="card active">
+      <div class="card-title">${s.title} <span class="badge ${s.color}" style="margin-left:6px">${s.badge}</span></div>
+      <div class="card-sub" style="margin-top:6px">${s.sub}</div>
+    </div>`;
+  renderDots();
+}
+function nextStep() { step = Math.min(step+1, steps.length-1); renderStep(); }
+function prevStep() { step = Math.max(step-1, 0); renderStep(); }
+renderStep();
+</script>
