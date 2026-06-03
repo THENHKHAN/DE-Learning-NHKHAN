@@ -1,0 +1,14 @@
+The file is ready to download as rdd_architecture_interactive.html — it opens perfectly in any browser (Edge, Chrome, Firefox) with full dark theme and colors preserved.
+Here's what's new compared to the in-chat version:
+
+Pictorial SVG diagrams added to each tab:
+
+  ->  Architecture — a side-by-side drawing of Python list (single machine, data in one box) vs RDD (4 nodes, each with a partition slice, all computing at once), plus a full Driver → SparkContext → DAG Scheduler → Cluster Manager → Worker nodes flow diagram with arrows
+
+  ->  Transformations — a visual pipeline strip showing Source RDD → filter → map → reduceByKey → ⚡ ACTION → Result, with dashed lines for lazy steps and a solid green arrow when the action fires
+
+  ->  Fault Tolerance — a 4-panel storyboard: ① all nodes healthy → ② Node 3 crashes (💥) → ③ DAG lineage consulted → ④ partition rebuilt on Node 1, job completes
+
+  ->  Real Scenario — a visual bar showing 500M rows being split across 20 nodes vs the single-machine slowdown
+
+The interactive crash/recover simulation and step-through pipeline are also included in the file.
